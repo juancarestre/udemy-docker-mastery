@@ -1,5 +1,16 @@
 # use this empty Dockerfile to build your assignment
 
+FROM node:latest
+
+WORKDIR /nodewebapp
+
+COPY . .
+
+RUN npm install
+
+EXPOSE 3000
+
+CMD [ "npm", "start" ]
 # This dir contains a Node.js app, you need to get it running in a container
 # No modifications to the app should be necessary, only edit this Dockerfile
 
