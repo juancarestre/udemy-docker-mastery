@@ -1,0 +1,43 @@
+docker service create --name hello --replicas 3 --detach=false --publish 8080:80 nginx
+http://ip172-18-0-26-bii002brjlp000edv860-8080.direct.labs.play-with-docker.com/
+
+manager y worker
+
+docker service/ swarm / node / update
+
+docker service: reemplaza el docker run
+
+docker info: para obtener toda la informacion
+docker swarm init: arranca docker swarm como un nodo manager
+docker node ls: muestra los nodos activos en el swarm
+
+docker service create alpine ping 8.8.8.8
+docker service ps <serviceid>: muestra los contenedores corriendo en el servicio
+docker service update <serviceid> <--attributetochange>
+
+new dawn
+docker swarm init --advertise-addr: con la interfaz de red por donde se van a hablar los nodos
+docker node ls
+docker node update  --role manager node2: le da mas privilegios al node2 para que sea manager
+docker swarm join-token manager: entrega un token para convertir un token en manager
+docker service create --replicas 3 alpine ping 8.8.8.8
+docker service ls
+docker service ps <service_name>
+
+new dawn2
+docker network create --driver overlay mydrupal
+docker service create --name psql --network mydrupal -e POSTGRES_PASSWORD=mypass postgres
+docker service create --name drupal --network mydrupal -p 80:80 drupal
+
+docker service create --name search --replicas 3 -p 9200:9200 elasticsearch:2
+
+work
+docker network create -d overlay backend
+docker network create -d overlay frontend
+docker service create --name vote -p 80:80 --network frontend --replica 2 <image>
+docker service create --name vote -p 80:80 --network frontend --replica 2 dockersamples/examplevotingapp_vote:before
+docker service create --name redis --network frontend --replica 1 redis:3.2
+docker service create --name worker --network frontend --network backend dockersamples/examplevotingapp_worker
+docker service create --name db --network backend --mount type=volume,source=db-data,target=/var/lib/postgresql/data postgres:9.4
+docker service create --name result --network backend -p 5001:80 dockersamples/examplevotingapp_result:before
+http://ip172-18-0-13-bii002brjlp000edv860-9200.direct.labs.play-with-docker.com/
